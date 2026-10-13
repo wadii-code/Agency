@@ -1,0 +1,609 @@
+{
+  "aveiro-maroc": {
+    "desktop": {
+      "width": 1440,
+      "height": 12135,
+      "tiles": [
+        {
+          "src": "/work/aveiro-maroc/desktop-01.webp",
+          "width": 1440,
+          "height": 2400
+        },
+        {
+          "src": "/work/aveiro-maroc/desktop-02.webp",
+          "width": 1440,
+          "height": 2400
+        },
+        {
+          "src": "/work/aveiro-maroc/desktop-03.webp",
+          "width": 1440,
+          "height": 2400
+        },
+        {
+          "src": "/work/aveiro-maroc/desktop-04.webp",
+          "width": 1440,
+          "height": 2400
+        },
+        {
+          "src": "/work/aveiro-maroc/desktop-05.webp",
+          "width": 1440,
+          "height": 2400
+        },
+        {
+          "src": "/work/aveiro-maroc/desktop-06.webp",
+          "width": 1440,
+          "height": 135
+        }
+      ]
+    },
+    "mobile": {
+      "width": 390,
+      "height": 21106,
+      "tiles": [
+        {
+          "src": "/work/aveiro-maroc/mobile-01.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/aveiro-maroc/mobile-02.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/aveiro-maroc/mobile-03.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/aveiro-maroc/mobile-04.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/aveiro-maroc/mobile-05.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/aveiro-maroc/mobile-06.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/aveiro-maroc/mobile-07.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/aveiro-maroc/mobile-08.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/aveiro-maroc/mobile-09.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/aveiro-maroc/mobile-10.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/aveiro-maroc/mobile-11.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/aveiro-maroc/mobile-12.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/aveiro-maroc/mobile-13.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/aveiro-maroc/mobile-14.webp",
+          "width": 780,
+          "height": 612
+        }
+      ]
+    }
+  },
+  "dyna-house": {
+    "desktop": {
+      "width": 1440,
+      "height": 19275,
+      "tiles": [
+        {
+          "src": "/work/dyna-house/desktop-01.webp",
+          "width": 1440,
+          "height": 2400
+        },
+        {
+          "src": "/work/dyna-house/desktop-02.webp",
+          "width": 1440,
+          "height": 2400
+        },
+        {
+          "src": "/work/dyna-house/desktop-03.webp",
+          "width": 1440,
+          "height": 2400
+        },
+        {
+          "src": "/work/dyna-house/desktop-04.webp",
+          "width": 1440,
+          "height": 2400
+        },
+        {
+          "src": "/work/dyna-house/desktop-05.webp",
+          "width": 1440,
+          "height": 2400
+        },
+        {
+          "src": "/work/dyna-house/desktop-06.webp",
+          "width": 1440,
+          "height": 2400
+        },
+        {
+          "src": "/work/dyna-house/desktop-07.webp",
+          "width": 1440,
+          "height": 2400
+        },
+        {
+          "src": "/work/dyna-house/desktop-08.webp",
+          "width": 1440,
+          "height": 2400
+        },
+        {
+          "src": "/work/dyna-house/desktop-09.webp",
+          "width": 1440,
+          "height": 75
+        }
+      ]
+    },
+    "mobile": {
+      "width": 390,
+      "height": 18437,
+      "tiles": [
+        {
+          "src": "/work/dyna-house/mobile-01.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/dyna-house/mobile-02.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/dyna-house/mobile-03.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/dyna-house/mobile-04.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/dyna-house/mobile-05.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/dyna-house/mobile-06.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/dyna-house/mobile-07.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/dyna-house/mobile-08.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/dyna-house/mobile-09.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/dyna-house/mobile-10.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/dyna-house/mobile-11.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/dyna-house/mobile-12.webp",
+          "width": 780,
+          "height": 1674
+        }
+      ]
+    }
+  },
+  "hormexpres": {
+    "desktop": {
+      "width": 1440,
+      "height": 10663,
+      "tiles": [
+        {
+          "src": "/work/hormexpres/desktop-01.webp",
+          "width": 1440,
+          "height": 2400
+        },
+        {
+          "src": "/work/hormexpres/desktop-02.webp",
+          "width": 1440,
+          "height": 2400
+        },
+        {
+          "src": "/work/hormexpres/desktop-03.webp",
+          "width": 1440,
+          "height": 2400
+        },
+        {
+          "src": "/work/hormexpres/desktop-04.webp",
+          "width": 1440,
+          "height": 2400
+        },
+        {
+          "src": "/work/hormexpres/desktop-05.webp",
+          "width": 1440,
+          "height": 1063
+        }
+      ]
+    },
+    "mobile": {
+      "width": 390,
+      "height": 19082,
+      "tiles": [
+        {
+          "src": "/work/hormexpres/mobile-01.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/hormexpres/mobile-02.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/hormexpres/mobile-03.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/hormexpres/mobile-04.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/hormexpres/mobile-05.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/hormexpres/mobile-06.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/hormexpres/mobile-07.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/hormexpres/mobile-08.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/hormexpres/mobile-09.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/hormexpres/mobile-10.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/hormexpres/mobile-11.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/hormexpres/mobile-12.webp",
+          "width": 780,
+          "height": 2964
+        }
+      ]
+    }
+  },
+  "lm7at7at": {
+    "desktop": {
+      "width": 1440,
+      "height": 1875,
+      "tiles": [
+        {
+          "src": "/work/lm7at7at/desktop-01.webp",
+          "width": 1440,
+          "height": 1875
+        }
+      ]
+    },
+    "mobile": {
+      "width": 390,
+      "height": 2348,
+      "tiles": [
+        {
+          "src": "/work/lm7at7at/mobile-01.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/lm7at7at/mobile-02.webp",
+          "width": 780,
+          "height": 1496
+        }
+      ]
+    }
+  },
+  "maison-materiau": {
+    "desktop": {
+      "width": 1440,
+      "height": 4493,
+      "tiles": [
+        {
+          "src": "/work/maison-materiau/desktop-01.webp",
+          "width": 1440,
+          "height": 2400
+        },
+        {
+          "src": "/work/maison-materiau/desktop-02.webp",
+          "width": 1440,
+          "height": 2093
+        }
+      ]
+    },
+    "mobile": {
+      "width": 390,
+      "height": 5796,
+      "tiles": [
+        {
+          "src": "/work/maison-materiau/mobile-01.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/maison-materiau/mobile-02.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/maison-materiau/mobile-03.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/maison-materiau/mobile-04.webp",
+          "width": 780,
+          "height": 1992
+        }
+      ]
+    }
+  },
+  "mardental": {
+    "desktop": {
+      "width": 1440,
+      "height": 6657,
+      "tiles": [
+        {
+          "src": "/work/mardental/desktop-01.webp",
+          "width": 1440,
+          "height": 2400
+        },
+        {
+          "src": "/work/mardental/desktop-02.webp",
+          "width": 1440,
+          "height": 2400
+        },
+        {
+          "src": "/work/mardental/desktop-03.webp",
+          "width": 1440,
+          "height": 1857
+        }
+      ]
+    },
+    "mobile": {
+      "width": 390,
+      "height": 10064,
+      "tiles": [
+        {
+          "src": "/work/mardental/mobile-01.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/mardental/mobile-02.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/mardental/mobile-03.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/mardental/mobile-04.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/mardental/mobile-05.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/mardental/mobile-06.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/mardental/mobile-07.webp",
+          "width": 780,
+          "height": 928
+        }
+      ]
+    }
+  },
+  "nounou-express": {
+    "desktop": {
+      "width": 1440,
+      "height": 7592,
+      "tiles": [
+        {
+          "src": "/work/nounou-express/desktop-01.webp",
+          "width": 1440,
+          "height": 2400
+        },
+        {
+          "src": "/work/nounou-express/desktop-02.webp",
+          "width": 1440,
+          "height": 2400
+        },
+        {
+          "src": "/work/nounou-express/desktop-03.webp",
+          "width": 1440,
+          "height": 2400
+        },
+        {
+          "src": "/work/nounou-express/desktop-04.webp",
+          "width": 1440,
+          "height": 392
+        }
+      ]
+    },
+    "mobile": {
+      "width": 390,
+      "height": 9043,
+      "tiles": [
+        {
+          "src": "/work/nounou-express/mobile-01.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/nounou-express/mobile-02.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/nounou-express/mobile-03.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/nounou-express/mobile-04.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/nounou-express/mobile-05.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/nounou-express/mobile-06.webp",
+          "width": 780,
+          "height": 2086
+        }
+      ]
+    }
+  },
+  "skiro": {
+    "desktop": {
+      "width": 1440,
+      "height": 10534,
+      "tiles": [
+        {
+          "src": "/work/skiro/desktop-01.webp",
+          "width": 1440,
+          "height": 2400
+        },
+        {
+          "src": "/work/skiro/desktop-02.webp",
+          "width": 1440,
+          "height": 2400
+        },
+        {
+          "src": "/work/skiro/desktop-03.webp",
+          "width": 1440,
+          "height": 2400
+        },
+        {
+          "src": "/work/skiro/desktop-04.webp",
+          "width": 1440,
+          "height": 2400
+        },
+        {
+          "src": "/work/skiro/desktop-05.webp",
+          "width": 1440,
+          "height": 934
+        }
+      ]
+    },
+    "mobile": {
+      "width": 390,
+      "height": 10691,
+      "tiles": [
+        {
+          "src": "/work/skiro/mobile-01.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/skiro/mobile-02.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/skiro/mobile-03.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/skiro/mobile-04.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/skiro/mobile-05.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/skiro/mobile-06.webp",
+          "width": 780,
+          "height": 3200
+        },
+        {
+          "src": "/work/skiro/mobile-07.webp",
+          "width": 780,
+          "height": 2182
+        }
+      ]
+    }
+  }
+}

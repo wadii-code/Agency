@@ -1,0 +1,858 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   Lemon Milk — SPARK display face.
+   Licensed font: drop the files into /public/fonts/lemon-milk/
+   (see the README there). Until then, `local()` picks up an installed
+   copy and the stack falls back to Inter Tight.
+------------------------------------------------------------------- */
+@font-face {
+  font-family: "Lemon Milk";
+  src:
+    local("LEMON MILK Medium"),
+    local("LEMONMILK-Medium"),
+    url("/fonts/lemon-milk/LEMONMILK-Medium.woff2") format("woff2"),
+    url("/fonts/lemon-milk/LEMONMILK-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lemon Milk";
+  src:
+    local("LEMON MILK Bold"),
+    local("LEMONMILK-Bold"),
+    url("/fonts/lemon-milk/LEMONMILK-Bold.woff2") format("woff2"),
+    url("/fonts/lemon-milk/LEMONMILK-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ------------------------------------------------------------------
+   Design tokens
+------------------------------------------------------------------- */
+:root {
+  /* Surfaces */
+  --bg-canvas: #000000;
+  --bg-surface: #120e22;
+  --bg-brand-violet: #251f49;
+
+  /* Text & lines */
+  --text-primary: #ffffff;
+  --text-muted: #8e8a9f;
+  --border-hairline: #2a263d;
+
+  /* Category taxonomy */
+  --cat-web: #00bae2;
+  --cat-uiux: #ff8709;
+  --cat-commerce: #fec5fb;
+  --cat-motion: #9d95ff;
+  --cat-infra: #0ae448;
+
+  /* Type scale */
+  --fs-hero: clamp(56px, 10vw, 150px);
+  --fs-section: clamp(32px, 5vw, 66px);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --header-h: 88px;
+}
+
+/* Lemon Milk is wide — keep the hero inside the gutter on small phones. */
+@media (max-width: 480px) {
+  :root {
+    --fs-hero: 12vw;
+  }
+}
+
+@theme inline {
+  --color-canvas: var(--bg-canvas);
+  --color-surface: var(--bg-surface);
+  --color-port-gore: var(--bg-brand-violet);
+  --color-primary: var(--text-primary);
+  --color-muted: var(--text-muted);
+  --color-hairline: var(--border-hairline);
+
+  --color-web: var(--cat-web);
+  --color-uiux: var(--cat-uiux);
+  --color-commerce: var(--cat-commerce);
+  --color-motion: var(--cat-motion);
+  --color-infra: var(--cat-infra);
+
+  --font-display: "Lemon Milk", var(--font-inter-tight), ui-sans-serif, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, sans-serif;
+  --font-serif: var(--font-instrument-serif), ui-serif, serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+
+  --text-hero: var(--fs-hero);
+  --text-hero--line-height: 0.9;
+  --text-hero--letter-spacing: -0.02em;
+  --text-section: var(--fs-section);
+  --text-section--line-height: 1.05;
+  --text-section--letter-spacing: -0.01em;
+  --text-annotation: 16px;
+  --text-annotation--line-height: 1.4;
+  --text-annotation--letter-spacing: 0.02em;
+
+  --ease-expo: var(--ease-out-expo);
+}
+
+@theme {
+  --animate-blink: blink 1.1s steps(1) infinite;
+
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------
+   Base
+------------------------------------------------------------------- */
+@layer base {
+  html {
+    color-scheme: dark;
+    background: var(--bg-canvas);
+    scroll-padding-top: calc(var(--header-h) + 16px);
+    /* Keeps the layout steady when the preview popup locks page scroll. */
+    scrollbar-gutter: stable;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* No CSS smooth scrolling: it skews ScrollTrigger's measurements and the
+     reload restore. In-page links scroll smoothly from PageScroll.tsx instead. */
+
+  body {
+    background: var(--bg-canvas);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.5;
+    overflow-x: clip;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--bg-brand-violet);
+    color: var(--text-primary);
+  }
+
+  :focus-visible {
+    outline: 1.5px solid var(--cat-motion);
+    outline-offset: 3px;
+  }
+
+  * {
+    scrollbar-color: var(--border-hairline) var(--bg-canvas);
+  }
+
+  button,
+  [role="button"] {
+    cursor: pointer;
+  }
+}
+
+/* Hide intro elements until GSAP takes over (no-JS keeps them visible). */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  [data-hero-hide] {
+    visibility: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Utilities
+------------------------------------------------------------------- */
+@utility shell {
+  width: 100%;
+  max-width: 1680px;
+  margin-inline: auto;
+  padding-inline: clamp(16px, 4vw, 56px);
+}
+
+@utility text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.25px var(--text-primary);
+}
+
+@utility grain {
+  pointer-events: none;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ------------------------------------------------------------------
+   Components
+------------------------------------------------------------------- */
+@layer components {
+  /* Pill CTA after the "Flow Button": outlined at rest; on hover or focus a
+     fill grows from the centre, the corners square off and the arrow swaps
+     from the right edge to the left. Markup in ui/Pill.tsx. */
+  .pill {
+    --pill-fill: var(--text-primary);
+    --pill-ink: var(--bg-canvas);
+    --pill-shift: 0.75rem;
+    --pill-inset: 1rem;
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 3.25rem;
+    padding-inline: 2rem;
+    overflow: hidden;
+    border: 1.5px solid rgb(255 255 255 / 0.4);
+    border-radius: 100px;
+    background: transparent;
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    white-space: nowrap;
+    transition:
+      border-color 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+      border-radius 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+      color 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+      scale 0.2s var(--ease-out-expo);
+  }
+  .pill-sm {
+    --pill-shift: 0.7rem;
+    --pill-inset: 0.85rem;
+    height: 2.5rem;
+    padding-inline: 1.75rem;
+    font-size: 14px;
+  }
+  .pill-label {
+    position: relative;
+    z-index: 1;
+    translate: calc(var(--pill-shift) * -1) 0;
+    transition: translate 0.8s ease-out;
+  }
+  .pill-icon {
+    position: absolute;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    transition:
+      left 0.8s cubic-bezier(0.34, 1.56, 0.64, 1),
+      right 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .pill-icon-in {
+    left: -25%;
+  }
+  .pill-icon-out {
+    right: var(--pill-inset);
+  }
+  .pill-fill {
+    position: absolute;
+    z-index: 0;
+    top: 50%;
+    left: 50%;
+    width: 125%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--pill-fill);
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.06);
+    transition:
+      transform 0.8s cubic-bezier(0.19, 1, 0.22, 1),
+      opacity 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  .pill:focus-visible {
+    border-color: transparent;
+    border-radius: 12px;
+    color: var(--pill-ink);
+  }
+  @media (hover: hover) {
+    .pill:hover {
+      border-color: transparent;
+      border-radius: 12px;
+      color: var(--pill-ink);
+    }
+    .pill:hover .pill-label {
+      translate: var(--pill-shift) 0;
+    }
+    .pill:hover .pill-icon-in {
+      left: var(--pill-inset);
+    }
+    .pill:hover .pill-icon-out {
+      right: -25%;
+    }
+    .pill:hover .pill-fill {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+  .pill:focus-visible .pill-label {
+    translate: var(--pill-shift) 0;
+  }
+  .pill:focus-visible .pill-icon-in {
+    left: var(--pill-inset);
+  }
+  .pill:focus-visible .pill-icon-out {
+    right: -25%;
+  }
+  .pill:focus-visible .pill-fill {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  .pill:active {
+    scale: 0.95;
+  }
+
+  /* Primary pill: violet → cyan ring at rest, filled with the same gradient. */
+  /* The ring sits inside the padding box, since the pill clips its overflow. */
+  .pill-gradient {
+    --pill-fill: linear-gradient(120deg, var(--cat-motion), var(--cat-web));
+    border-width: 0;
+  }
+  .pill-gradient::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 1.5px;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--cat-motion), var(--cat-web), var(--cat-motion));
+    background-size: 200% 100%;
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+    animation: pill-sheen 6s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes pill-sheen {
+    to {
+      background-position: 200% 0;
+    }
+  }
+
+  /* Services accordion: separate cards. Opening one grows it smoothly: the
+     image and bullet columns slide in, the description rises under the title
+     and the + turns into a ×. Phones stack the details under the title;
+     desktops lay them out sideways. Markup in Services.tsx. */
+  .svc-card {
+    --svc-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --svc-dur: 0.8s;
+    --svc-media-h: 10rem;
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.5rem 5.5rem minmax(0, 1fr) 2.75rem;
+    grid-template-rows: minmax(2.75rem, auto) auto auto;
+    grid-template-areas:
+      "num title title icon"
+      ". desc desc desc"
+      "media media points points";
+    align-items: start;
+    padding: 1.5rem 1.25rem;
+    /* The frosted surface and rim come from `.glass`; opening adds a brighter tint. */
+    border-radius: 1rem;
+    transition:
+      background-color 0.6s var(--svc-ease),
+      grid-template-columns var(--svc-dur) var(--svc-ease);
+  }
+  .svc-card::before {
+    opacity: 0.7;
+  }
+  .svc-card[data-open] {
+    background-color: rgb(255 255 255 / 0.05);
+  }
+  .svc-card[data-open]::before {
+    opacity: 1;
+  }
+  @media (hover: hover) {
+    .svc-card:not([data-open]):hover::before {
+      opacity: 1;
+    }
+    .svc-card:not([data-open]):hover .svc-icon {
+      scale: 1.08;
+    }
+  }
+  .svc-card:has(.svc-toggle:focus-visible) {
+    outline: 1.5px solid var(--cat-motion);
+    outline-offset: 3px;
+  }
+
+  .svc-num,
+  .svc-title {
+    align-self: center;
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+  }
+  .svc-num {
+    grid-area: num;
+  }
+  .svc-title {
+    grid-area: title;
+    padding-right: 1rem;
+  }
+  /* The title button stretches over the whole card, so anywhere toggles it. */
+  .svc-toggle {
+    text-align: left;
+    text-transform: inherit;
+  }
+  .svc-toggle:focus-visible {
+    outline: none;
+  }
+  .svc-toggle::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: 1rem;
+  }
+
+  .svc-icon {
+    grid-area: icon;
+    position: relative;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    justify-self: end;
+    align-self: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    /* Black and white: a white disc with a black + that turns into a grey ×. */
+    background-color: var(--text-primary);
+    color: var(--bg-canvas);
+    pointer-events: none;
+    transition:
+      rotate 0.6s var(--svc-ease),
+      background-color 0.4s ease,
+      color 0.4s ease,
+      scale 0.3s ease;
+  }
+  .svc-card[data-open] .svc-icon {
+    rotate: 45deg;
+    background-color: rgb(255 255 255 / 0.1);
+    color: var(--text-primary);
+  }
+
+  .svc-desc {
+    grid-area: desc;
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--svc-dur) var(--svc-ease);
+  }
+  .svc-card[data-open] .svc-desc {
+    grid-template-rows: 1fr;
+  }
+  .svc-desc-text {
+    max-width: 40ch;
+    padding-top: 0.75rem;
+    color: var(--text-muted);
+    font-size: 15px;
+    line-height: 1.6;
+    opacity: 0;
+    translate: 0 0.5rem;
+    transition:
+      opacity 0.5s ease,
+      translate 0.6s var(--svc-ease);
+  }
+  .svc-card[data-open] .svc-desc-text {
+    opacity: 1;
+    translate: 0 0;
+    transition-delay: 0.15s;
+  }
+
+  .svc-media {
+    grid-area: media;
+    height: 0;
+    overflow: hidden;
+    transition: height var(--svc-dur) var(--svc-ease);
+  }
+  .svc-card[data-open] .svc-media {
+    height: calc(var(--svc-media-h) + 1.25rem);
+  }
+  .svc-frame {
+    position: relative;
+    width: 100%;
+    height: var(--svc-media-h);
+    margin-top: 1.25rem;
+    overflow: hidden;
+    border-radius: 0.75rem;
+    background: #0a0a0b;
+    /* Outline paints above the canvas, unlike an inset shadow. */
+    outline: 1px solid rgb(255 255 255 / 0.08);
+    outline-offset: -1px;
+  }
+  .svc-photo {
+    position: absolute;
+    inset: 0;
+    scale: 1.15;
+    transition: scale 1.1s var(--svc-ease);
+  }
+  .svc-card[data-open] .svc-photo {
+    scale: 1;
+  }
+
+  .svc-points {
+    grid-area: points;
+    max-height: 0;
+    overflow: hidden;
+    padding-left: 1rem;
+    transition: max-height var(--svc-dur) var(--svc-ease);
+  }
+  .svc-card[data-open] .svc-points {
+    max-height: 16rem;
+  }
+  .svc-points li {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding-block: 0.3rem;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.3;
+    opacity: 0;
+    translate: 0.75rem 0;
+    transition:
+      opacity 0.4s ease,
+      translate 0.5s var(--svc-ease);
+  }
+  .svc-points li:first-child {
+    margin-top: 1.25rem;
+  }
+  .svc-card[data-open] .svc-points li {
+    opacity: 1;
+    translate: 0 0;
+    transition-delay: calc(0.2s + var(--i) * 0.06s);
+  }
+
+  @media (min-width: 768px) {
+    .svc-card {
+      --svc-media-h: 14rem;
+      grid-template-columns: 3.5rem 11rem minmax(0, 1fr) 3.25rem;
+      grid-template-rows: minmax(3.25rem, auto) auto auto;
+      padding: 2rem 2rem 2rem 2.25rem;
+    }
+    .svc-num,
+    .svc-title {
+      font-size: 1.5rem;
+    }
+    .svc-icon {
+      width: 3.25rem;
+      height: 3.25rem;
+    }
+    .svc-desc-text {
+      font-size: 16px;
+    }
+    .svc-points li {
+      font-size: 15px;
+    }
+  }
+
+  /* Desktop: image and bullets sit beside the title; their columns grow open. */
+  @media (min-width: 1024px) {
+    .svc-card {
+      --svc-media-h: 17rem;
+      grid-template-columns: 5.5rem minmax(0, 1fr) 0rem 0rem 3.75rem;
+      grid-template-rows: minmax(3.75rem, auto) 1fr;
+      grid-template-areas:
+        "num title media points icon"
+        ". desc media points .";
+      padding: 2.25rem 2.25rem 2.25rem 3rem;
+    }
+    .svc-card[data-open] {
+      grid-template-columns: 5.5rem minmax(0, 1fr) 16rem 14rem 3.75rem;
+    }
+    .svc-num,
+    .svc-title {
+      font-size: clamp(1.375rem, 2.1vw, 2rem);
+    }
+    .svc-title,
+    .svc-desc {
+      padding-right: 2rem;
+    }
+    .svc-icon {
+      width: 3.75rem;
+      height: 3.75rem;
+    }
+    .svc-desc {
+      align-self: end;
+    }
+    .svc-card[data-open] .svc-media {
+      height: var(--svc-media-h);
+    }
+    .svc-frame {
+      width: 14rem;
+      margin-top: 0;
+    }
+    .svc-points {
+      padding-left: 0;
+    }
+    /* No wrapping while the column grows open. */
+    .svc-points li {
+      white-space: nowrap;
+    }
+    .svc-card[data-open] .svc-points {
+      max-height: var(--svc-media-h);
+    }
+    .svc-points li:first-child {
+      margin-top: 0.75rem;
+    }
+  }
+
+  /* Discipline motion graphics (ServiceArt.tsx): black-and-white canvas scenes. */
+  .svc-art {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(100% 70% at 50% 0%, rgb(255 255 255 / 0.06), transparent 70%),
+      #0a0a0b;
+  }
+  .svc-art canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Process card stack (after the Framer "CardStack"): each card sits --p
+     places behind the front one: raised, smaller and darker. No `filter`
+     here: it would stop the glass inside from blurring what sits behind. */
+  .stack-card {
+    --p: 0;
+    position: absolute;
+    inset: 0;
+    z-index: calc(10 - var(--p));
+    transform: translateY(calc(var(--p) * -8%)) scale(calc(1 - var(--p) * 0.06));
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .stack-card[data-front] {
+    cursor: grab;
+    touch-action: pan-y;
+  }
+  .stack-card[data-dragging] {
+    cursor: grabbing;
+    transition: none;
+  }
+
+  /* Black-and-white frosted glass, shared by the process cards, the work
+     cards and the contact popup: a translucent tint over a heavy blur, a light
+     rim that is brightest at the top-left and a specular line along the top. */
+  .glass {
+    position: relative;
+    isolation: isolate;
+    background:
+      radial-gradient(120% 90% at 100% 0%, rgb(255 255 255 / 0.1), transparent 60%),
+      linear-gradient(140deg, rgb(255 255 255 / 0.12), rgb(255 255 255 / 0.03) 45%, rgb(255 255 255 / 0.06));
+    -webkit-backdrop-filter: blur(28px);
+    backdrop-filter: blur(28px);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.3),
+      inset 0 -1px 0 rgb(255 255 255 / 0.05),
+      0 40px 80px -30px rgb(0 0 0 / 0.75);
+  }
+  .glass::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(
+      140deg,
+      rgb(255 255 255 / 0.5),
+      rgb(255 255 255 / 0.1) 35%,
+      rgb(255 255 255 / 0.04) 65%,
+      rgb(255 255 255 / 0.22)
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+  /* Darker glass where text sits over busy content (the contact popup). */
+  .glass-dark {
+    background:
+      radial-gradient(120% 90% at 100% 0%, rgb(255 255 255 / 0.09), transparent 60%),
+      linear-gradient(140deg, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0.02) 45%, rgb(255 255 255 / 0.05)),
+      rgb(8 8 10 / 0.62);
+  }
+
+  /* Process stack panes. */
+  .glass-card {
+    overflow: hidden;
+    border-radius: 1.5rem;
+  }
+  /* Depth: panes further back are darker. */
+  .glass-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    border-radius: inherit;
+    background: #05040a;
+    opacity: calc(var(--p) * 0.16);
+    pointer-events: none;
+    transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  /* Only the front pane shows its content; the ones behind stay clean frosted glass. */
+  .glass-content {
+    position: relative;
+    z-index: 1;
+    transition: opacity 0.35s ease;
+  }
+  .stack-card:not([data-front]) .glass-content {
+    opacity: 0;
+  }
+  .stack-card[data-front] .glass-content {
+    transition-delay: 0.15s;
+  }
+
+  /* Work cards: glass tiles whose rim brightens on hover. */
+  .glass-tile {
+    border-radius: 1.25rem;
+  }
+  .glass-tile::before {
+    opacity: 0.75;
+  }
+  @media (hover: hover) {
+    .glass-tile:hover::before {
+      opacity: 1;
+    }
+  }
+
+  /* Navbar pill: dark glass with a lighter drop shadow. */
+  .glass-nav {
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.28),
+      inset 0 -1px 0 rgb(255 255 255 / 0.05),
+      0 14px 40px -14px rgb(0 0 0 / 0.8);
+  }
+
+  /* Glass lettering (footer wordmark): a frosted translucent fill with a soft
+     diagonal reflection. The rim and the brighter top edge come from the
+     #glass-letter SVG filter (Footer.tsx), which only lights the outer edges:
+     a text stroke would also trace the font's internal overlapping contours. */
+  .glass-text {
+    color: transparent;
+    background:
+      linear-gradient(105deg, transparent 36%, rgb(255 255 255 / 0.12) 46%, transparent 56%),
+      linear-gradient(175deg, rgb(255 255 255 / 0.2), rgb(255 255 255 / 0.04) 55%, rgb(255 255 255 / 0.1));
+    -webkit-background-clip: text;
+    background-clip: text;
+    filter: url(#glass-letter) drop-shadow(0 24px 48px rgb(0 0 0 / 0.55));
+  }
+
+  /* Soft white light behind the glass, drifting slowly (keeps the panes black and white). */
+  .glow-orb {
+    position: absolute;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    animation: orb-drift 16s ease-in-out infinite alternate;
+  }
+  .glow-orb-a {
+    left: 6%;
+    top: 4%;
+    width: 52%;
+    background: radial-gradient(closest-side, rgb(255 255 255 / 0.32), transparent);
+  }
+  .glow-orb-b {
+    right: 2%;
+    bottom: 2%;
+    width: 46%;
+    background: radial-gradient(closest-side, rgb(255 255 255 / 0.2), transparent);
+    animation-duration: 21s;
+    animation-direction: alternate-reverse;
+  }
+  .glow-orb-c {
+    left: 34%;
+    top: 34%;
+    width: 34%;
+    background: radial-gradient(closest-side, rgb(255 255 255 / 0.14), transparent);
+    animation-duration: 13s;
+  }
+  @keyframes orb-drift {
+    from {
+      translate: -7% -5%;
+    }
+    to {
+      translate: 8% 6%;
+    }
+  }
+
+  /* Navbar label swap: blur up into place (Framer "appear" effect). */
+  .nav-appear {
+    animation: nav-appear 0.45s var(--ease-out-expo) 0.05s both;
+  }
+  @keyframes nav-appear {
+    from {
+      opacity: 0;
+      filter: blur(10px);
+      transform: translateY(10px);
+    }
+  }
+
+  /* Mixed-font headline (DualFontText): letters flagged data-alt use the italic serif. */
+  [data-df-char][data-alt] {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-style: italic;
+  }
+
+  /* Ring cursor over big targets (see LensCursor): the ring replaces the native pointer. */
+  .has-lens-cursor [data-cursor],
+  .has-lens-cursor [data-cursor] * {
+    cursor: none;
+  }
+
+  /* Project preview scroller: slim, on-brand scrollbar. */
+  .viewer-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--cat-motion) transparent;
+  }
+
+  .caret {
+    display: inline-block;
+    width: 0.55em;
+    height: 1.15em;
+    margin-left: 2px;
+    vertical-align: text-bottom;
+    background: var(--cat-web);
+    animation: var(--animate-blink);
+  }
+
+  .skip-link {
+    position: fixed;
+    left: 16px;
+    top: 12px;
+    z-index: 100;
+    padding: 10px 18px;
+    border: 1px solid var(--text-primary);
+    border-radius: 100px;
+    background: var(--bg-canvas);
+    transform: translateY(-200%);
+  }
+  .skip-link:focus-visible {
+    transform: none;
+  }
+}
