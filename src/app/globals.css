@@ -3,16 +3,18 @@
 /* ------------------------------------------------------------------
    Lemon Milk — SPARK display face.
    Licensed font: drop the files into /public/fonts/lemon-milk/
-   (see the README there). Until then, `local()` picks up an installed
-   copy and the stack falls back to Inter Tight.
+   (see the README there), then restore the commented `url()` sources.
+   They stay commented until the files exist: every visitor would
+   otherwise request four missing files (404s in the console). Until
+   then, `local()` picks up an installed copy and the stack falls back
+   to Inter Tight.
 ------------------------------------------------------------------- */
 @font-face {
   font-family: "Lemon Milk";
   src:
     local("LEMON MILK Medium"),
-    local("LEMONMILK-Medium"),
-    url("/fonts/lemon-milk/LEMONMILK-Medium.woff2") format("woff2"),
-    url("/fonts/lemon-milk/LEMONMILK-Medium.otf") format("opentype");
+    local("LEMONMILK-Medium");
+  /* url("/fonts/lemon-milk/LEMONMILK-Medium.woff2") format("woff2"), */
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -22,9 +24,8 @@
   font-family: "Lemon Milk";
   src:
     local("LEMON MILK Bold"),
-    local("LEMONMILK-Bold"),
-    url("/fonts/lemon-milk/LEMONMILK-Bold.woff2") format("woff2"),
-    url("/fonts/lemon-milk/LEMONMILK-Bold.otf") format("opentype");
+    local("LEMONMILK-Bold");
+  /* url("/fonts/lemon-milk/LEMONMILK-Bold.woff2") format("woff2"), */
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -156,10 +157,41 @@
   }
 }
 
-/* Hide intro elements until GSAP takes over (no-JS keeps them visible). */
-@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
-  [data-hero-hide] {
-    visibility: hidden;
+/* Page intro in CSS rather than GSAP, so it plays from the first paint instead
+   of waiting for the JavaScript (the hero headline is the LCP element): the
+   navbar drops in, the headline blurs up word by word and the CTAs rise in. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-nav-drop] {
+    animation: intro-nav 1.1s var(--ease-out-expo) 0.3s both;
+  }
+  [data-hero-title] [data-df-word] {
+    animation: intro-word 1.3s var(--ease-out-expo) both;
+    animation-delay: calc(0.1s + var(--word, 0) * 0.07s);
+  }
+  [data-hero-fade] {
+    animation: intro-rise 1.1s var(--ease-out-expo) 0.45s both;
+  }
+}
+
+@keyframes intro-nav {
+  from {
+    translate: 0 -160%;
+  }
+}
+/* Starts just above 0: Chrome never counts text first painted at opacity 0 as
+   the Largest Contentful Paint, so the headline would only register on some
+   later repaint (seconds after it is actually on screen). */
+@keyframes intro-word {
+  from {
+    opacity: 0.01;
+    translate: 0 60%;
+    filter: blur(14px);
+  }
+}
+@keyframes intro-rise {
+  from {
+    opacity: 0;
+    translate: 0 16px;
   }
 }
 
@@ -812,11 +844,34 @@
     }
   }
 
-  /* Mixed-font headline (DualFontText): letters flagged data-alt use the italic serif. */
-  [data-df-char][data-alt] {
+  /* Mixed-font headline (DualFontText): letters flagged data-alt show their
+     italic serif twin instead. The twin is a zero-width ::before drawn over the
+     letter, so swapping faces only repaints: the letter's box (and the layout)
+     never changes, and a transform slides it to where the reflow would put it.
+     The face not in use is painted transparent (not hidden), so a swap is never
+     a "first paint" that would push the LCP back. */
+  [data-df-char] {
+    display: inline-block;
+  }
+  [data-df-char]::before {
+    content: attr(data-char);
+    display: inline-block;
+    width: 0;
+    line-height: 0;
     font-family: var(--font-serif);
     font-weight: 400;
     font-style: italic;
+    -webkit-text-fill-color: transparent;
+  }
+  [data-df-char][data-alt] {
+    -webkit-text-fill-color: transparent;
+  }
+  [data-df-char][data-alt]::before {
+    -webkit-text-fill-color: currentColor;
+  }
+  /* Briefly set while DualFontText measures the serif widths. */
+  [data-df-measure] [data-df-char]::before {
+    width: auto;
   }
 
   /* Ring cursor over big targets (see LensCursor): the ring replaces the native pointer. */

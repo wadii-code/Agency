@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { Maximize2 } from "lucide-react";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
@@ -9,7 +10,10 @@ import { PROJECTS } from "@/lib/projects";
 import { cn } from "@/lib/cn";
 import { MetaballText } from "./ui/MetaballText";
 import { CategoryLabel } from "./ui/CategoryLabel";
-import ProjectViewer from "./ProjectViewer";
+
+// The preview popup is its own chunk, fetched as soon as a card is hovered or focused.
+const loadViewer = () => import("./ProjectViewer");
+const ProjectViewer = dynamic(loadViewer, { ssr: false });
 
 function StatusPill({ children, live }: { children: string; live?: boolean }) {
   return (
@@ -85,7 +89,11 @@ export default function Showcase() {
             <span className="glow-orb glow-orb-b" />
             <span className="glow-orb glow-orb-c" />
           </div>
-          <ul className="relative grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
+          <ul
+            className="relative grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3"
+            onPointerEnter={loadViewer}
+            onFocus={loadViewer}
+          >
             {PROJECTS.map((project, i) => {
               const featured = project.layout === "featured";
               const wide = project.layout === "wide";
@@ -95,15 +103,12 @@ export default function Showcase() {
                   data-card
                   className={cn(featured && "sm:col-span-2 lg:row-span-2", wide && "sm:col-span-2")}
                 >
-                  <button
-                    type="button"
+                  {/* The title's button stretches over the whole card, so anywhere opens the preview. */}
+                  <article
                     data-project={project.slug}
                     data-cursor="link"
                     data-cursor-size={featured ? 160 : 120}
-                    aria-haspopup="dialog"
-                    aria-label={`${project.title}, ${project.type}. Open full preview`}
-                    onClick={(e) => setViewer({ index: i, origin: e.currentTarget.getBoundingClientRect() })}
-                    className="glass glass-tile group flex h-full w-full flex-col p-2.5 text-left outline-offset-4 transition-[scale] duration-500 ease-expo hover:scale-[1.015]"
+                    className="glass glass-tile group flex h-full w-full flex-col p-2.5 text-left outline-offset-4 transition-[scale] duration-500 ease-expo hover:scale-[1.015] has-[:focus-visible]:outline-[1.5px] has-[:focus-visible]:outline-solid has-[:focus-visible]:outline-motion"
                   >
                     <div
                       className={cn(
@@ -133,7 +138,7 @@ export default function Showcase() {
                         aria-hidden
                         className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-linear-to-b from-canvas/50 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                       />
-                      <div className="absolute inset-x-3 top-3 flex flex-wrap gap-2 transition-[opacity,translate] duration-300 ease-expo group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100 [@media(hover:hover)]:-translate-y-2 [@media(hover:hover)]:opacity-0">
+                      <div className="absolute inset-x-3 top-3 flex flex-wrap gap-2 transition-[opacity,translate] duration-300 ease-expo group-hover:translate-y-0 group-hover:opacity-100 group-has-[:focus-visible]:translate-y-0 group-has-[:focus-visible]:opacity-100 [@media(hover:hover)]:-translate-y-2 [@media(hover:hover)]:opacity-0">
                         <StatusPill live>Live Site</StatusPill>
                         <StatusPill>{project.tag}</StatusPill>
                       </div>
@@ -150,7 +155,19 @@ export default function Showcase() {
                             featured ? "text-[clamp(24px,2.4vw,34px)]" : "text-[20px]",
                           )}
                         >
-                          {project.title}
+                          <button
+                            type="button"
+                            aria-haspopup="dialog"
+                            onClick={(e) =>
+                              setViewer({
+                                index: i,
+                                origin: e.currentTarget.closest("[data-project]")?.getBoundingClientRect() ?? null,
+                              })
+                            }
+                            className="text-left uppercase after:absolute after:inset-0 after:z-[1] after:rounded-[1.25rem] after:content-[''] focus-visible:outline-none"
+                          >
+                            {project.title}
+                          </button>
                         </h3>
                         <p className="mt-1.5 text-[14px] text-muted">{project.type}</p>
                       </div>
@@ -171,7 +188,7 @@ export default function Showcase() {
                         {project.summary}
                       </p>
                     ) : null}
-                  </button>
+                  </article>
                 </li>
               );
             })}

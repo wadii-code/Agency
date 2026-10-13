@@ -12,33 +12,12 @@ export default function Hero() {
   useGSAP(
     () => {
       const el = root.current;
-      const title = el?.querySelector<HTMLElement>("[data-hero-title]");
-      if (!el || !title) return;
+      if (!el) return;
 
       const mm = gsap.matchMedia();
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        /* Intro: the headline blurs up word by word as the stars rush in. */
-        gsap.set(title, { autoAlpha: 1 });
-        gsap.from(title.querySelectorAll("[data-df-word]"), {
-          yPercent: 60,
-          opacity: 0,
-          filter: "blur(14px)",
-          duration: 1.3,
-          ease: "expo.out",
-          stagger: 0.07,
-          delay: 0.1,
-          clearProps: "filter,transform",
-        });
-
-        gsap
-          .timeline({ defaults: { ease: "expo.out" } })
-          .from("[data-stars]", { autoAlpha: 0, scale: 1.2, duration: 2.8 }, 0)
-          .fromTo(
-            "[data-hero-fade]",
-            { autoAlpha: 0, y: 16 },
-            { autoAlpha: 1, y: 0, duration: 1.1, stagger: 0.08 },
-            0.45,
-          );
+        /* The stars rush in (the headline and CTAs animate in CSS, see globals.css). */
+        gsap.from("[data-stars]", { autoAlpha: 0, scale: 1.2, duration: 2.8, ease: "expo.out" });
 
         /* Scroll-out parallax */
         const scrub = { trigger: el, start: "top top", end: "bottom top", scrub: true };
@@ -73,12 +52,11 @@ export default function Hero() {
           <DualFontText
             id="hero-title"
             data-hero-title
-            data-hero-hide
             data-cursor="lens"
             lines={["We build", "websites &", "digital", "solutions"]}
             className="font-display text-hero font-bold uppercase"
           />
-          <div data-hero-fade data-hero-hide className="mt-12 flex flex-wrap justify-center gap-3 md:mt-14">
+          <div data-hero-fade className="mt-12 flex flex-wrap justify-center gap-3 md:mt-14">
             <Pill href="#contact" variant="gradient" data-contact aria-haspopup="dialog">
               Start a Project
             </Pill>

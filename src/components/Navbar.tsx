@@ -25,7 +25,6 @@ const prefersReducedMotion = () => window.matchMedia("(prefers-reduced-motion: r
  * blurs up into place. Hover or keyboard focus opens the full list again.
  */
 export default function Navbar() {
-  const header = useRef<HTMLElement>(null);
   const pill = useRef<HTMLDivElement>(null);
   const settledWidth = useRef<number | null>(null);
   const [open, setOpen] = useState(false);
@@ -73,9 +72,6 @@ export default function Navbar() {
   }, [expanded, active]);
 
   useGSAP(() => {
-    const el = header.current;
-    if (!el) return;
-
     // Track which section is being read (refreshed after pinned sections add their spacing).
     navLinks.forEach(({ href }) => {
       const id = href.slice(1);
@@ -95,11 +91,6 @@ export default function Navbar() {
       end: "max",
       onToggle: (self) => setScrolled(self.isActive),
     });
-
-    // Drop in with the hero's entrance.
-    gsap.matchMedia().add("(prefers-reduced-motion: no-preference)", () => {
-      gsap.from(el, { yPercent: -160, duration: 1.1, ease: "expo.out", delay: 0.3 });
-    });
   });
 
   const close = () => setOpen(false);
@@ -107,7 +98,11 @@ export default function Navbar() {
 
   return (
     <>
-      <header ref={header} className="pointer-events-none fixed inset-x-0 top-3 z-50 flex justify-center px-3 md:top-4">
+      {/* Drops in with the hero's entrance (`[data-nav-drop]` in globals.css). */}
+      <header
+        data-nav-drop
+        className="pointer-events-none fixed inset-x-0 top-3 z-50 flex justify-center px-3 md:top-4"
+      >
         <div
           ref={pill}
           onPointerEnter={() => setEngaged(true)}

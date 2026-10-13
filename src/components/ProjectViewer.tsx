@@ -183,7 +183,8 @@ export default function ProjectViewer({ projects, index, origin, onIndexChange, 
         alt={i === 0 ? `Full-page ${device} preview of ${project.title}` : ""}
         sizes={sizes}
         loading={i < 2 ? "eager" : "lazy"}
-        className={cn("block h-auto w-full select-none", i > 0 && "-mt-px")}
+        // The faint fill is the loading skeleton: the tile's space is reserved and tinted until it arrives.
+        className={cn("block h-auto w-full select-none bg-white/[0.04]", i > 0 && "-mt-px")}
         draggable={false}
       />
     ));
