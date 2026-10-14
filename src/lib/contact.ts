@@ -1,12 +1,10 @@
-"use client";
-
 import { z } from "zod";
 
 /*
- * Contact form plumbing: validating the fields (zod), opening the popup,
- * remembering what the visitor typed (local storage only, no database) and
- * sending it through Web3Forms, which forwards it to the inbox the access key
- * was created with.
+ * Contact form plumbing: validating the fields (zod, shared by the popup and
+ * the /api/contact route), opening the popup, remembering what the visitor
+ * typed (local storage only, no database) and sending it to /api/contact,
+ * which emails it through Resend with a key that stays on the server.
  */
 
 export const NAME_MAX = 20;
@@ -75,10 +73,6 @@ export function cleanPhone(raw: string) {
 const STORAGE_KEY = "spark-contact";
 export const OPEN_CONTACT_EVENT = "spark:contact-open";
 
-const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
-// Public by design: Web3Forms keys are meant for client-side forms.
-const ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
-
 /** Opens the contact popup from anywhere (elements with `data-contact` open it too). */
 export function openContact() {
   window.dispatchEvent(new Event(OPEN_CONTACT_EVENT));
@@ -108,30 +102,12 @@ export class ContactError extends Error {
 }
 
 export async function sendContact(details: ContactDetails, botcheck: boolean) {
-  if (!ACCESS_KEY) {
-    // Until the Web3Forms key is added, development simulates a successful send.
-    if (process.env.NODE_ENV !== "production") {
-      console.info("[contact] NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY is not set; simulating a send.", details);
-      await new Promise((resolve) => setTimeout(resolve, 1200));
-      return;
-    }
-    throw new ContactError("not-configured");
-  }
-
-  const response = await fetch(WEB3FORMS_ENDPOINT, {
+  const response = await fetch("/api/contact", {
     method: "POST",
     headers: { "Content-Type": "application/json", Accept: "application/json" },
-    body: JSON.stringify({
-      access_key: ACCESS_KEY,
-      subject: `New project enquiry from ${details.name}`,
-      from_name: "SPARK website",
-      name: details.name,
-      email: details.email,
-      phone: details.phone,
-      message: details.message,
-      botcheck,
-    }),
+    body: JSON.stringify({ ...details, botcheck }),
   });
-  const data = (await response.json().catch(() => null)) as { success?: boolean } | null;
-  if (!response.ok || !data?.success) throw new ContactError("failed");
+  if (response.status === 503) throw new ContactError("not-configured");
+  const data = (await response.json().catch(() => null)) as { ok?: boolean } | null;
+  if (!response.ok || !data?.ok) throw new ContactError("failed");
 }

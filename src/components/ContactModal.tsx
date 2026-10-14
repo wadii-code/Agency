@@ -488,7 +488,7 @@ export default function ContactModal() {
                     </div>
                   );
                 })}
-                {/* Spam trap for Web3Forms: people never see or tick it. */}
+                {/* Spam trap (checked by /api/contact): people never see or tick it. */}
                 <input ref={honeypot} type="checkbox" name="botcheck" tabIndex={-1} aria-hidden className="hidden" />
               </fieldset>
 
