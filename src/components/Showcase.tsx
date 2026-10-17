@@ -3,13 +3,14 @@
 import { useCallback, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { Maximize2 } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { useReveal } from "@/lib/useReveal";
-import { PROJECTS } from "@/lib/projects";
+import { PROJECTS, projectPath } from "@/lib/projects";
 import { cn } from "@/lib/cn";
 import { MetaballText } from "./ui/MetaballText";
 import { CategoryLabel } from "./ui/CategoryLabel";
+import { Pill } from "./ui/Pill";
 
 // The preview popup is its own chunk, fetched as soon as a card is hovered or focused.
 const loadViewer = () => import("./ProjectViewer");
@@ -173,14 +174,15 @@ export default function Showcase() {
                       </div>
                       <div className="flex shrink-0 flex-col items-end gap-1.5">
                         <CategoryLabel id={project.category} className="text-[12px]" />
-                        <span className="inline-flex items-center gap-1 text-[13px] text-muted transition-colors duration-300 group-hover:text-primary">
-                          View project
-                          <Maximize2
-                            aria-hidden
-                            className="size-3.5 transition-transform duration-300 ease-expo group-hover:scale-110"
-                            strokeWidth={1.5}
-                          />
-                        </span>
+                        {/* The card opens the preview; this link (above the card's button) opens the case study. */}
+                        <a
+                          href={projectPath(project.slug)}
+                          className="relative z-[2] inline-flex min-h-8 items-center gap-1 text-[13px] text-muted underline-offset-4 transition-colors duration-300 hover:text-primary hover:underline group-hover:text-primary"
+                        >
+                          Case study
+                          <span className="sr-only">: {project.title}</span>
+                          <ArrowUpRight aria-hidden className="size-3.5" strokeWidth={1.5} />
+                        </a>
                       </div>
                     </div>
                     {featured && project.summary ? (
@@ -193,6 +195,10 @@ export default function Showcase() {
               );
             })}
           </ul>
+        </div>
+
+        <div data-fade className="mt-12 md:mt-16">
+          <Pill href="/work">All case studies</Pill>
         </div>
       </div>
 

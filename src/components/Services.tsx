@@ -1,11 +1,12 @@
 "use client";
 
 import { useId, useRef, useState, type CSSProperties } from "react";
-import { Plus } from "lucide-react";
+import { ArrowRight, Plus } from "lucide-react";
 import { categories, categoryOrder } from "@/lib/taxonomy";
-import { SERVICE_DETAILS } from "@/lib/services";
+import { SERVICE_DETAILS, servicePath } from "@/lib/services";
 import { useReveal } from "@/lib/useReveal";
 import { MetaballText } from "./ui/MetaballText";
+import { Pill } from "./ui/Pill";
 import { ServiceArt } from "./ServiceArt";
 
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -44,7 +45,7 @@ export default function Services() {
           </div>
           <ul className="relative flex flex-col gap-4 md:gap-6">
             {categoryOrder.map((id, i) => {
-              const { name, color } = categories[id];
+              const { name, short, color } = categories[id];
               const { text, points, art } = SERVICE_DETAILS[id];
               const isOpen = open[i];
               const buttonId = `${baseId}-${id}-title`;
@@ -81,7 +82,17 @@ export default function Services() {
                   <div id={panelId} inert={!isOpen} className="contents">
                     <div className="svc-desc">
                       <div className="min-h-0 overflow-hidden">
-                        <p className="svc-desc-text">{text}</p>
+                        {/* Above the card-wide toggle, but only the link catches clicks. */}
+                        <div className="svc-desc-text pointer-events-none relative z-[2]">
+                          <p>{text}</p>
+                          <a
+                            href={servicePath(id)}
+                            className="pointer-events-auto mt-4 inline-flex items-center gap-1.5 text-[14px] font-semibold text-primary underline-offset-4 hover:underline"
+                          >
+                            More on {short}
+                            <ArrowRight aria-hidden className="size-3.5" strokeWidth={1.5} />
+                          </a>
+                        </div>
                       </div>
                     </div>
                     <div className="svc-media">
@@ -93,9 +104,9 @@ export default function Services() {
                     </div>
                     <ul className="svc-points">
                       {points.map((point, p) => (
-                        <li key={point} style={{ "--i": p } as CSSProperties}>
+                        <li key={point.name} style={{ "--i": p } as CSSProperties}>
                           <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-(--svc-color)" />
-                          {point}
+                          {point.name}
                         </li>
                       ))}
                     </ul>
@@ -104,6 +115,10 @@ export default function Services() {
               );
             })}
           </ul>
+        </div>
+
+        <div data-fade className="mt-12 md:mt-16">
+          <Pill href="/services">All services</Pill>
         </div>
       </div>
     </section>

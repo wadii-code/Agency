@@ -1,6 +1,7 @@
 import { categories, categoryOrder } from "@/lib/taxonomy";
-import { SERVICE_DETAILS } from "@/lib/services";
-import { PROJECTS } from "@/lib/projects";
+import { SERVICE_DETAILS, servicePath } from "@/lib/services";
+import { PROJECTS, projectPath } from "@/lib/projects";
+import { PROCESS_STEPS } from "@/lib/process";
 import { CONTACT_EMAIL, INSTAGRAM_URL, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
 /* /llms.txt (llmstxt.org): a plain summary of the studio for AI assistants, prerendered at build time. */
@@ -10,19 +11,25 @@ export function GET() {
     "",
     `> ${SITE_DESCRIPTION}`,
     "",
-    "SPARK is a one-studio team covering strategy, design, engineering and hosting, working with clients worldwide. The website is a single page; project enquiries go through its \"Start a Project\" form.",
+    "SPARK is one studio covering research, design, engineering and hosting, based in Casablanca and working with clients worldwide. Project enquiries go through the \"Start a Project\" form on any page.",
     "",
     "## Services",
     "",
-    ...categoryOrder.map((id) => `- ${categories[id].name}: ${SERVICE_DETAILS[id].text}`),
+    `- [All services](${SITE_URL}/services): the five disciplines on one page`,
+    ...categoryOrder.map(
+      (id) => `- [${SERVICE_DETAILS[id].title}](${SITE_URL}${servicePath(id)}): ${categories[id].name}. ${SERVICE_DETAILS[id].text}`,
+    ),
+    "",
+    "## Case studies",
+    "",
+    `- [All case studies](${SITE_URL}/work)`,
+    ...PROJECTS.map(
+      (project) => `- [${project.title}](${SITE_URL}${projectPath(project.slug)}): ${project.type}. ${project.summary}`,
+    ),
     "",
     "## Process",
     "",
-    "Discover, Design, Build, Launch, Scale: from workshops and audits to Next.js engineering, a careful launch and ongoing iteration.",
-    "",
-    "## Selected work",
-    "",
-    ...PROJECTS.map((project) => `- ${project.title} (${project.type}): ${project.summary}`),
+    ...PROCESS_STEPS.map((step) => `- ${step.title}: ${step.body}`),
     "",
     "## Contact",
     "",

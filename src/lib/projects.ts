@@ -121,3 +121,8 @@ export const PROJECTS: Project[] = DATA.map((project) => ({
   cover: `/work/${project.slug}/cover.webp`,
   previews: manifest[project.slug] ?? {},
 }));
+
+/** The project's case-study page. */
+export const projectPath = (slug: string) => `/work/${slug}`;
+
+export const projectBySlug = (slug: string) => PROJECTS.find((project) => project.slug === slug) ?? null;

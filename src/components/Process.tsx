@@ -3,48 +3,14 @@
 import { useRef, useState, type ComponentType, type CSSProperties, type PointerEvent, type SVGProps } from "react";
 import { CodeXml, Compass, PenTool, Rocket, TrendingUp } from "lucide-react";
 import { useReveal } from "@/lib/useReveal";
+import { PROCESS_STEPS } from "@/lib/process";
 import { MetaballText } from "./ui/MetaballText";
 import { PillButton } from "./ui/Pill";
 
-type Step = {
-  title: string;
-  body: string;
-  outputs: string[];
-  Icon: ComponentType<SVGProps<SVGSVGElement> & { strokeWidth?: number }>;
-};
+type Icon = ComponentType<SVGProps<SVGSVGElement> & { strokeWidth?: number }>;
 
-const STEPS: Step[] = [
-  {
-    title: "Discover",
-    body: "Workshops, audits and research to pin down goals, audiences and what success looks like.",
-    outputs: ["Brief & goals", "Content audit", "Sitemap"],
-    Icon: Compass,
-  },
-  {
-    title: "Design",
-    body: "Wireframes, interface design and a token-based system, prototyped and tested before production code.",
-    outputs: ["Wireframes", "UI design", "Design tokens"],
-    Icon: PenTool,
-  },
-  {
-    title: "Build",
-    body: "Engineering on Next.js and a headless CMS, reviewed together on a live staging link.",
-    outputs: ["Next.js", "Headless CMS", "Staging"],
-    Icon: CodeXml,
-  },
-  {
-    title: "Launch",
-    body: "Performance, accessibility and SEO checks, then a careful release with analytics in place.",
-    outputs: ["QA & a11y", "SEO", "Analytics"],
-    Icon: Rocket,
-  },
-  {
-    title: "Scale",
-    body: "Monitoring, iteration and new features over time, so the product keeps improving after launch.",
-    outputs: ["Monitoring", "Iteration", "Support"],
-    Icon: TrendingUp,
-  },
-];
+const ICONS: Icon[] = [Compass, PenTool, CodeXml, Rocket, TrendingUp];
+const STEPS = PROCESS_STEPS.map((step, i) => ({ ...step, Icon: ICONS[i] }));
 
 const pad = (n: number) => String(n).padStart(2, "0");
 // Elastic pull while dragging, and how far counts as a throw rather than a click.

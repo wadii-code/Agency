@@ -3,10 +3,10 @@
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
-import { ArrowDown, ChevronLeft, ChevronRight, Lock, Monitor, Smartphone, X } from "lucide-react";
+import { ArrowDown, ArrowUpRight, ChevronLeft, ChevronRight, Lock, Monitor, Smartphone, X } from "lucide-react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { cn } from "@/lib/cn";
-import type { Device, Project } from "@/lib/projects";
+import { projectPath, type Device, type Project } from "@/lib/projects";
 import { CategoryLabel } from "./ui/CategoryLabel";
 
 type ViewerProps = {
@@ -257,24 +257,37 @@ export default function ProjectViewer({ projects, index, origin, onIndexChange, 
               ))}
             </div>
 
-            <div className="hidden items-center gap-1 sm:flex">
-              <button
-                type="button"
-                aria-label="Previous project"
-                onClick={() => go(-1)}
-                className="grid size-10 place-items-center rounded-full border border-hairline text-muted transition-colors hover:border-white/40 hover:text-primary"
-              >
-                <ChevronLeft aria-hidden className="size-4" strokeWidth={1.5} />
-              </button>
-              <button
-                type="button"
-                aria-label="Next project"
-                onClick={() => go(1)}
-                className="grid size-10 place-items-center rounded-full border border-hairline text-muted transition-colors hover:border-white/40 hover:text-primary"
-              >
-                <ChevronRight aria-hidden className="size-4" strokeWidth={1.5} />
-              </button>
-            </div>
+            {/* Browsing the showcase: link out to the case study and step between projects.
+                Opened from a case study (a single project), neither applies. */}
+            {projects.length > 1 ? (
+              <>
+                <a
+                  href={projectPath(project.slug)}
+                  className="hidden h-9 items-center gap-1.5 rounded-full border border-hairline px-3 text-[13px] text-muted transition-colors hover:border-white/40 hover:text-primary md:flex"
+                >
+                  Case study
+                  <ArrowUpRight aria-hidden className="size-3.5" strokeWidth={1.5} />
+                </a>
+                <div className="hidden items-center gap-1 sm:flex">
+                  <button
+                    type="button"
+                    aria-label="Previous project"
+                    onClick={() => go(-1)}
+                    className="grid size-10 place-items-center rounded-full border border-hairline text-muted transition-colors hover:border-white/40 hover:text-primary"
+                  >
+                    <ChevronLeft aria-hidden className="size-4" strokeWidth={1.5} />
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Next project"
+                    onClick={() => go(1)}
+                    className="grid size-10 place-items-center rounded-full border border-hairline text-muted transition-colors hover:border-white/40 hover:text-primary"
+                  >
+                    <ChevronRight aria-hidden className="size-4" strokeWidth={1.5} />
+                  </button>
+                </div>
+              </>
+            ) : null}
 
             <button
               type="button"
@@ -314,7 +327,9 @@ export default function ProjectViewer({ projects, index, origin, onIndexChange, 
                     </li>
                   ))}
                 </ul>
-                <p className="mt-10 text-[13px] text-muted">Scroll inside the phone to explore. Use ← → to switch projects.</p>
+                <p className="mt-10 text-[13px] text-muted">
+                  Scroll inside the phone to explore.{projects.length > 1 ? " Use ← → to switch projects." : ""}
+                </p>
               </aside>
 
               {/* Phone frame on larger screens; edge-to-edge on an actual phone. */}

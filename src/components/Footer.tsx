@@ -5,6 +5,8 @@ import { ArrowUpRight } from "lucide-react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { useReveal } from "@/lib/useReveal";
 import { CONTACT_EMAIL, CONTACT_EMAIL_URL, INSTAGRAM_HANDLE, INSTAGRAM_URL } from "@/lib/site";
+import { categories, categoryOrder } from "@/lib/taxonomy";
+import { servicePath } from "@/lib/services";
 import { SparkMark } from "./ui/SparkLogo";
 
 const SOCIALS = [{ label: "Instagram", handle: INSTAGRAM_HANDLE, href: INSTAGRAM_URL }];
@@ -100,12 +102,26 @@ export default function Footer() {
         </h2>
         <div data-divider className="mt-20 h-px w-full bg-hairline md:mt-28" />
 
-        <div className="grid gap-12 pt-12 sm:grid-cols-3">
+        <div className="grid gap-12 pt-12 sm:grid-cols-2 lg:grid-cols-4">
           <FooterColumn title="Studio">
-            <p className="py-2.5 text-primary/80">Working worldwide</p>
+            <p className="py-2.5 text-primary/80">Casablanca, working worldwide</p>
             <p className="font-mono text-[14px] text-muted">
               Local time <span className="text-primary/80">{time ?? "--:--"}</span>
             </p>
+            <a href="/work" className={`mt-2 ${linkClass}`}>
+              Selected work
+            </a>
+          </FooterColumn>
+
+          {/* Every service page, on every page: the site's topic map. */}
+          <FooterColumn title="Services">
+            <nav aria-label="Services" className="flex flex-col items-start gap-1">
+              {categoryOrder.map((id) => (
+                <a key={id} href={servicePath(id)} className={linkClass}>
+                  {categories[id].name}
+                </a>
+              ))}
+            </nav>
           </FooterColumn>
 
           <FooterColumn title="Contact">

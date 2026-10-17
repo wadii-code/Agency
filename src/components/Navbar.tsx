@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { cn } from "@/lib/cn";
@@ -9,11 +10,16 @@ import { Annotation } from "./ui/Annotation";
 import { Pill } from "./ui/Pill";
 import { SparkMark } from "./ui/SparkLogo";
 
-export const navLinks = [
-  { href: "#studio", label: "Studio" },
-  { href: "#process", label: "Process" },
-  { href: "#work", label: "Work" },
-  { href: "#contact", label: "Contact" },
+/*
+ * `id` is the home-page section each link scrolls to; `page` is where it
+ * leads from the other pages (the footer, #contact, is on every page).
+ */
+const NAV = [
+  { id: "studio", label: "Studio", page: "/#studio" },
+  { id: "services", label: "Services", page: "/services" },
+  { id: "process", label: "Process", page: "/#process" },
+  { id: "work", label: "Work", page: "/work" },
+  { id: "contact", label: "Contact", page: "#contact" },
 ];
 
 const prefersReducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -31,8 +37,14 @@ export default function Navbar() {
   const [active, setActive] = useState<string | null>(null);
   const [engaged, setEngaged] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+  const home = pathname === "/";
 
-  const current = navLinks.find((l) => l.href === `#${active}`) ?? null;
+  const navLinks = NAV.map((link) => ({ ...link, href: home ? `#${link.id}` : link.page }));
+  // Inner pages (/services/…, /work/…) collapse to the section they belong to.
+  const pageLink = navLinks.find((l) => l.page.startsWith("/") && !l.page.includes("#") && pathname.startsWith(l.page));
+  const current = navLinks.find((l) => l.id === active) ?? pageLink ?? null;
+  const currentId = current?.id ?? null;
   const expanded = engaged || current === null;
 
   /* Mobile menu: page scroll lock + Escape. */
@@ -69,12 +81,11 @@ export default function Navbar() {
         },
       },
     );
-  }, [expanded, active]);
+  }, [expanded, currentId]);
 
   useGSAP(() => {
     // Track which section is being read (refreshed after pinned sections add their spacing).
-    navLinks.forEach(({ href }) => {
-      const id = href.slice(1);
+    NAV.forEach(({ id }) => {
       const section = document.getElementById(id);
       if (!section) return;
       ScrollTrigger.create({
@@ -117,22 +128,27 @@ export default function Navbar() {
           )}
         >
           <nav aria-label="Primary" className="flex items-center gap-4 whitespace-nowrap pl-2.5">
-            <a href="#top" aria-label="SPARK, back to top" onClick={close} className="grid shrink-0 place-items-center">
+            <a
+              href={home ? "#top" : "/"}
+              aria-label={home ? "SPARK, back to top" : "SPARK home"}
+              onClick={close}
+              className="grid shrink-0 place-items-center"
+            >
               <SparkMark className="h-[22px] w-auto" />
             </a>
 
             {/* Desktop: every link, or just the section being read. */}
             <ul
-              key={expanded ? "all" : (active ?? "none")}
+              key={expanded ? "all" : (currentId ?? "none")}
               className="hidden items-center gap-3.5 px-2 md:flex"
             >
               {(expanded ? navLinks : current ? [current] : []).map((link) => {
-                const isCurrent = link.href === `#${active}`;
+                const isCurrent = link.id === currentId;
                 return (
-                  <li key={link.href} className="nav-appear">
+                  <li key={link.id} className="nav-appear">
                     <a
                       href={link.href}
-                      aria-current={isCurrent ? "location" : undefined}
+                      aria-current={isCurrent ? (link === pageLink ? "page" : "location") : undefined}
                       className={cn(
                         "flex items-center gap-1.5 text-[15px] leading-none transition-colors duration-300",
                         isCurrent || !expanded ? "text-primary" : "text-primary/60 hover:text-primary",
@@ -191,7 +207,7 @@ export default function Navbar() {
             <Annotation>Menu</Annotation>
             <ul className="mt-6">
               {navLinks.map((link, i) => (
-                <li key={link.href}>
+                <li key={link.id}>
                   <a
                     href={link.href}
                     onClick={close}
