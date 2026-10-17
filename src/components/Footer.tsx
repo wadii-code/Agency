@@ -5,8 +5,7 @@ import { ArrowUpRight } from "lucide-react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { useReveal } from "@/lib/useReveal";
 import { CONTACT_EMAIL, CONTACT_EMAIL_URL, INSTAGRAM_HANDLE, INSTAGRAM_URL } from "@/lib/site";
-import { categories, categoryOrder } from "@/lib/taxonomy";
-import { servicePath } from "@/lib/services";
+import { categories, categoryOrder, servicePath } from "@/lib/taxonomy";
 import { SparkMark } from "./ui/SparkLogo";
 
 const SOCIALS = [{ label: "Instagram", handle: INSTAGRAM_HANDLE, href: INSTAGRAM_URL }];

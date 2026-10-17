@@ -11,8 +11,12 @@ type MetaballTextProps = Omit<HTMLAttributes<HTMLHeadingElement>, "children"> & 
   hoverColor?: string;
   /** How much the letters under the pointer grow. */
   hoverScale?: number;
-  /** `scroll`: words blur up into place when scrolled into view. `none`: the parent animates `[data-mb-word]`. */
-  reveal?: "scroll" | "none";
+  /**
+   * `scroll`: words blur up into place when scrolled into view.
+   * `intro`: words blur up from the first paint, in CSS (page titles at the top, see globals.css).
+   * `none`: the parent animates `[data-mb-word]`.
+   */
+  reveal?: "scroll" | "intro" | "none";
 };
 
 /*
@@ -174,7 +178,8 @@ export function MetaballText({
               color: hoverColor,
               duration: 0.32,
               ease: "power2.out",
-              delay: reveal === "scroll" ? 0.6 : 0,
+              // Wait for the words to settle first.
+              delay: reveal === "scroll" ? 0.6 : reveal === "intro" ? 1.3 : 0,
               stagger: { each: 0.035, repeat: 1, yoyo: true },
               onComplete: () => {
                 visual.style.filter = "";
@@ -189,7 +194,14 @@ export function MetaballText({
   );
 
   return (
-    <Tag ref={root} data-cursor="lens" className={cn("relative isolate", className)} style={style} {...rest}>
+    <Tag
+      ref={root}
+      data-cursor="lens"
+      data-mb-intro={reveal === "intro" || undefined}
+      className={cn("relative isolate", className)}
+      style={style}
+      {...rest}
+    >
       <span className="sr-only">{text}</span>
       <svg aria-hidden className="pointer-events-none absolute size-0 overflow-hidden">
         <defs>
@@ -213,7 +225,7 @@ export function MetaballText({
       <span data-mb-visual aria-hidden className="block">
         {words.map((word, w) => (
           <span key={w}>
-            <span data-mb-word className="inline-block whitespace-nowrap">
+            <span data-mb-word className="inline-block whitespace-nowrap" style={{ "--word": w } as CSSProperties}>
               {Array.from(word).map((char, c) => (
                 <span key={c} data-mb-char className="inline-block origin-bottom transition-colors duration-200">
                   {char}

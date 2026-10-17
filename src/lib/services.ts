@@ -1,11 +1,11 @@
-import type { CategoryId } from "./taxonomy";
+import { categories, servicePath, type CategoryId } from "./taxonomy";
+
+export { servicePath };
 
 /** A topic as a knowledge-graph entity (its English Wikipedia article), for structured data. */
 export type Entity = { name: string; wiki: string };
 
 export type ServiceDetail = {
-  /** URL slug of the service page: /services/<slug>. */
-  slug: string;
   /** What people search for; the page title. */
   title: string;
   /** Short descriptor under the service name. */
@@ -31,7 +31,6 @@ export type ServiceDetail = {
  */
 export const SERVICE_DETAILS: Record<CategoryId, ServiceDetail> = {
   web: {
-    slug: "web-design-development",
     title: "Website & Web App Development",
     kicker: "Web design and development",
     description:
@@ -77,7 +76,6 @@ export const SERVICE_DETAILS: Record<CategoryId, ServiceDetail> = {
     art: "Animation: a web page assembling inside a browser window",
   },
   uiux: {
-    slug: "ui-ux-design",
     title: "UI/UX Design & Design Systems",
     kicker: "Interface design and design systems",
     description:
@@ -117,7 +115,6 @@ export const SERVICE_DETAILS: Record<CategoryId, ServiceDetail> = {
     art: "Animation: a selected interface component with a toggle, colour swatches and a slider",
   },
   commerce: {
-    slug: "ecommerce-development",
     title: "E-Commerce Development & Customer Portals",
     kicker: "Online stores and customer portals",
     description:
@@ -156,7 +153,6 @@ export const SERVICE_DETAILS: Record<CategoryId, ServiceDetail> = {
     art: "Animation: a product added to the cart, which counts up",
   },
   motion: {
-    slug: "motion-design",
     title: "Web Animation & Motion Design",
     kicker: "Web animation and kinetic typography",
     description:
@@ -191,7 +187,6 @@ export const SERVICE_DETAILS: Record<CategoryId, ServiceDetail> = {
     art: "Animation: kinetic letters, a bouncing ball and a timeline playhead",
   },
   infra: {
-    slug: "digital-infrastructure",
     title: "Cloud Hosting, CI/CD & Web Infrastructure",
     kicker: "Hosting, deployment and monitoring",
     description:
@@ -230,9 +225,7 @@ export const SERVICE_DETAILS: Record<CategoryId, ServiceDetail> = {
   },
 };
 
-export const servicePath = (id: CategoryId) => `/services/${SERVICE_DETAILS[id].slug}`;
-
 export function serviceBySlug(slug: string) {
-  const entry = Object.entries(SERVICE_DETAILS).find(([, detail]) => detail.slug === slug);
-  return entry ? { id: entry[0] as CategoryId, ...entry[1] } : null;
+  const id = (Object.keys(categories) as CategoryId[]).find((key) => categories[key].slug === slug);
+  return id ? { id, ...SERVICE_DETAILS[id] } : null;
 }

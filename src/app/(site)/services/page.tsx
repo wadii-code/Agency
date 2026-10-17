@@ -1,12 +1,15 @@
 import { ArrowRight } from "lucide-react";
 import { Annotation } from "@/components/ui/Annotation";
+import { MetaballText } from "@/components/ui/MetaballText";
 import { SparkGlyph } from "@/components/ui/SparkLogo";
 import { PageHeader } from "@/components/PageHeader";
-import { CtaBand } from "@/components/CtaBand";
+import { CtaBand, GlowOrbs } from "@/components/CtaBand";
+import { Reveal } from "@/components/Reveal";
 import { JsonLd } from "@/components/JsonLd";
 import { categories, categoryOrder } from "@/lib/taxonomy";
 import { SERVICE_DETAILS, servicePath } from "@/lib/services";
 import { pageMetadata } from "@/lib/metadata";
+import { rise } from "@/lib/rise";
 import { absoluteUrl, breadcrumbList, graph, serviceId, webPage, type Crumb } from "@/lib/structured-data";
 
 const PATH = "/services";
@@ -39,26 +42,38 @@ export default function ServicesPage() {
   );
 
   return (
-    <>
+    <Reveal>
       <JsonLd data={jsonLd} />
       <PageHeader crumbs={CRUMBS}>
-        <Annotation className="mt-10">Five disciplines. One studio.</Annotation>
-        <h1 className="mt-5 max-w-[16ch] font-display text-section font-bold uppercase">Services</h1>
-        <p className="mt-6 max-w-[60ch] text-[18px] leading-relaxed text-primary/75">
+        <Annotation className="mt-10" {...rise(0.1)}>
+          Five disciplines. One studio.
+        </Annotation>
+        <MetaballText
+          as="h1"
+          reveal="intro"
+          text="Services"
+          hoverColor="var(--cat-web)"
+          className="mt-5 max-w-[16ch] font-display text-section font-bold uppercase"
+        />
+        <p className="mt-6 max-w-[60ch] text-[18px] leading-relaxed text-primary/75" {...rise(0.45)}>
           SPARK covers the whole life of a digital product, from research and interface design to engineering, launch and
           hosting. One team in Casablanca, working with clients worldwide, so nothing gets lost between agencies.
         </p>
       </PageHeader>
 
-      <section aria-label="All services" className="shell pb-8">
-        <ol className="flex flex-col gap-4 md:gap-6">
+      <section aria-label="All services" className="shell relative pb-8">
+        <GlowOrbs />
+        <ol className="relative flex flex-col gap-4 md:gap-6">
           {categoryOrder.map((id, i) => {
             const { name, color } = categories[id];
             const { title, text, points } = SERVICE_DETAILS[id];
             return (
-              <li key={id}>
+              // The first card is on screen at load: it rises in with the header; the rest fade in on scroll.
+              <li key={id} data-fade {...(i === 0 ? rise(0.6) : {})}>
                 <a
                   href={servicePath(id)}
+                  data-cursor="link"
+                  data-cursor-size={140}
                   className="glass glass-tile group grid gap-6 p-6 transition-[scale] duration-500 ease-expo hover:scale-[1.008] md:grid-cols-12 md:gap-10 md:p-10"
                 >
                   <span className="font-display text-[22px] font-bold md:col-span-1 md:text-[28px]">{pad(i + 1)}.</span>
@@ -101,6 +116,6 @@ export default function ServicesPage() {
         title="Not sure where to start?"
         text="Tell us what you're building. We'll suggest the right mix of design, engineering and infrastructure for it."
       />
-    </>
+    </Reveal>
   );
 }

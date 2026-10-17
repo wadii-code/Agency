@@ -2,14 +2,16 @@
 
 import { useId, useRef, useState, type CSSProperties } from "react";
 import { ArrowRight, Plus } from "lucide-react";
-import { categories, categoryOrder } from "@/lib/taxonomy";
-import { SERVICE_DETAILS, servicePath } from "@/lib/services";
+import { categories, categoryOrder, servicePath, type CategoryId } from "@/lib/taxonomy";
 import { useReveal } from "@/lib/useReveal";
 import { MetaballText } from "./ui/MetaballText";
 import { Pill } from "./ui/Pill";
 import { ServiceArt } from "./ServiceArt";
 
 const pad = (n: number) => String(n).padStart(2, "0");
+
+/** What each card shows. Passed in by the page, so the service pages' full copy stays out of the browser bundle. */
+export type ServiceCard = { text: string; points: string[]; art: string };
 
 /**
  * The five disciplines as an accordion of separate cards. Opening a card
@@ -18,7 +20,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
  * the + turns into a ×.
  * Cards open independently; the first starts open. Styles: `.svc-*` in globals.css.
  */
-export default function Services() {
+export default function Services({ cards }: { cards: Record<CategoryId, ServiceCard> }) {
   const root = useRef<HTMLElement>(null);
   const baseId = useId();
   const [open, setOpen] = useState(() => categoryOrder.map((_, i) => i === 0));
@@ -46,7 +48,7 @@ export default function Services() {
           <ul className="relative flex flex-col gap-4 md:gap-6">
             {categoryOrder.map((id, i) => {
               const { name, short, color } = categories[id];
-              const { text, points, art } = SERVICE_DETAILS[id];
+              const { text, points, art } = cards[id];
               const isOpen = open[i];
               const buttonId = `${baseId}-${id}-title`;
               const panelId = `${baseId}-${id}-panel`;
@@ -104,9 +106,9 @@ export default function Services() {
                     </div>
                     <ul className="svc-points">
                       {points.map((point, p) => (
-                        <li key={point.name} style={{ "--i": p } as CSSProperties}>
+                        <li key={point} style={{ "--i": p } as CSSProperties}>
                           <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-(--svc-color)" />
-                          {point.name}
+                          {point}
                         </li>
                       ))}
                     </ul>

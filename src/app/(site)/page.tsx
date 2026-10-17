@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import Hero from "@/components/Hero";
 import Manifesto from "@/components/Manifesto";
-import Services from "@/components/Services";
+import Services, { type ServiceCard } from "@/components/Services";
 import Process from "@/components/Process";
 import Showcase from "@/components/Showcase";
 import { JsonLd } from "@/components/JsonLd";
 import { PROJECTS, projectPath } from "@/lib/projects";
+import { categoryOrder } from "@/lib/taxonomy";
+import { SERVICE_DETAILS } from "@/lib/services";
 import { ORGANIZATION_ID, absoluteUrl, graph, webPage } from "@/lib/structured-data";
 import { SITE_DESCRIPTION, SITE_TITLE } from "@/lib/site";
 
@@ -29,13 +31,21 @@ const jsonLd = graph(
   },
 );
 
+// Only what the accordion shows goes to the browser, not the service pages' full copy.
+const serviceCards = Object.fromEntries(
+  categoryOrder.map((id) => {
+    const { text, points, art } = SERVICE_DETAILS[id];
+    return [id, { text, points: points.map((point) => point.name), art }];
+  }),
+) as Record<(typeof categoryOrder)[number], ServiceCard>;
+
 export default function Home() {
   return (
     <>
       <JsonLd data={jsonLd} />
       <Hero />
       <Manifesto />
-      <Services />
+      <Services cards={serviceCards} />
       <Process />
       <Showcase />
     </>

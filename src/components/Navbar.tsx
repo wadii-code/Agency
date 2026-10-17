@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { cn } from "@/lib/cn";
 import { CONTACT_EMAIL, CONTACT_EMAIL_URL, INSTAGRAM_HANDLE, INSTAGRAM_URL } from "@/lib/site";
-import { Annotation } from "./ui/Annotation";
+import { categories, categoryOrder, servicePath } from "@/lib/taxonomy";
 import { Pill } from "./ui/Pill";
 import { SparkMark } from "./ui/SparkLogo";
 
@@ -32,6 +31,7 @@ const prefersReducedMotion = () => window.matchMedia("(prefers-reduced-motion: r
  */
 export default function Navbar() {
   const pill = useRef<HTMLDivElement>(null);
+  const firstLink = useRef<HTMLAnchorElement>(null);
   const settledWidth = useRef<number | null>(null);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<string | null>(null);
@@ -47,10 +47,11 @@ export default function Navbar() {
   const currentId = current?.id ?? null;
   const expanded = engaged || current === null;
 
-  /* Mobile menu: page scroll lock + Escape. */
+  /* Mobile menu: page scroll lock, Escape, and focus moves into the menu. */
   useEffect(() => {
     document.documentElement.style.overflow = open ? "hidden" : "";
     if (!open) return;
+    firstLink.current?.focus({ preventScroll: true });
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpen(false);
     };
@@ -187,63 +188,99 @@ export default function Navbar() {
               aria-label={open ? "Close menu" : "Open menu"}
               onClick={() => setOpen((v) => !v)}
             >
-              {open ? <X className="size-4" strokeWidth={1.5} /> : <Menu className="size-4" strokeWidth={1.5} />}
+              {/* Two lines that turn into a cross (`.burger` in globals.css). */}
+              <span aria-hidden data-open={open || undefined} className="burger">
+                <span />
+                <span />
+              </span>
             </button>
           </nav>
         </div>
       </header>
 
-      {/* Mobile menu: sibling of the header so `fixed` isn't trapped by its backdrop-filter. */}
-      <div
-        id="mobile-menu"
-        inert={!open}
-        className={cn(
-          "fixed inset-0 z-40 flex flex-col bg-canvas/95 backdrop-blur-xl transition-[opacity,visibility] duration-500 md:hidden",
-          open ? "visible opacity-100" : "invisible opacity-0",
-        )}
-      >
-        <nav aria-label="Mobile" className="shell flex flex-1 flex-col justify-between pb-10 pt-[calc(var(--header-h)+24px)]">
-          <div>
-            <Annotation>Menu</Annotation>
-            <ul className="mt-6">
-              {navLinks.map((link, i) => (
-                <li key={link.id}>
+      {/*
+        Mobile menu (`.mm` in globals.css): a curtain drops from the top, the
+        links rise out of their masks one after another, then the services and
+        contact fade up; closing plays it back the other way. Transforms and
+        opacity only, so it stays smooth on phones. Sibling of the header so
+        `fixed` isn't trapped by its backdrop-filter.
+      */}
+      <div id="mobile-menu" data-open={open || undefined} inert={!open} className="mm fixed inset-0 z-40 md:hidden">
+        <div aria-hidden className="mm-curtain" />
+        <nav
+          aria-label="Mobile"
+          className="shell relative flex h-full flex-col overflow-y-auto pb-[max(28px,env(safe-area-inset-bottom))] pt-[calc(var(--header-h)+32px)]"
+        >
+          <ul>
+            {navLinks.map((link, i) => {
+              const isCurrent = link.id === currentId;
+              return (
+                <li key={link.id} className="overflow-hidden" style={{ "--i": i } as CSSProperties}>
                   <a
+                    ref={i === 0 ? firstLink : undefined}
                     href={link.href}
                     onClick={close}
-                    className="flex items-baseline gap-4 border-b border-hairline py-5 font-display text-[36px] font-medium uppercase leading-none"
+                    aria-current={isCurrent ? (link === pageLink ? "page" : "location") : undefined}
+                    className="mm-link flex items-center justify-between gap-6 py-1"
                   >
-                    <span className="font-sans text-[13px] font-normal text-muted">0{i + 1}</span>
-                    {link.label}
+                    <span className="flex items-center gap-3 font-display text-[clamp(38px,11.5vw,54px)] font-bold uppercase leading-[1.08] tracking-[-0.01em]">
+                      {link.label}
+                      {isCurrent ? (
+                        <span aria-hidden className="size-2.5 shrink-0 rounded-full bg-linear-to-r from-motion to-web" />
+                      ) : null}
+                    </span>
+                    <span className="font-mono text-[12px] text-muted">0{i + 1}</span>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+
+          <div className="mm-fade mt-9" style={{ "--i": 0 } as CSSProperties}>
+            <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted">Services</p>
+            <ul className="mt-3 flex flex-wrap gap-2">
+              {categoryOrder.map((id) => (
+                <li key={id}>
+                  <a
+                    href={servicePath(id)}
+                    onClick={close}
+                    className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-3.5 text-[13px] transition-colors active:bg-white/10"
+                  >
+                    <span aria-hidden className="size-1.5 rounded-full" style={{ background: categories[id].color }} />
+                    {categories[id].short}
                   </a>
                 </li>
               ))}
             </ul>
           </div>
-          <div className="space-y-6">
-            <Pill href="#contact" variant="gradient" data-contact aria-haspopup="dialog" onClick={close}>
-              Start a Project
-            </Pill>
-            <p className="flex flex-col items-start gap-1 text-[14px] leading-relaxed text-muted">
-              <a
-                href={CONTACT_EMAIL_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary/80 transition-colors hover:text-primary"
-              >
-                {CONTACT_EMAIL}
-                <span className="sr-only"> (opens Gmail in a new tab)</span>
-              </a>
-              <a
-                href={INSTAGRAM_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary/80 transition-colors hover:text-primary"
-              >
-                {INSTAGRAM_HANDLE}
-                <span className="sr-only"> on Instagram (opens in a new tab)</span>
-              </a>
-            </p>
+
+          <div className="mm-fade mt-auto pt-10" style={{ "--i": 1 } as CSSProperties}>
+            <div className="h-px bg-linear-to-r from-motion/0 via-motion/50 to-web/0" />
+            <div className="mt-6 flex flex-col gap-5">
+              <Pill href="#contact" variant="gradient" data-contact aria-haspopup="dialog" onClick={close} className="w-full">
+                Start a Project
+              </Pill>
+              <p className="flex items-center justify-between gap-4 text-[14px] text-muted">
+                <a
+                  href={CONTACT_EMAIL_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="min-w-0 truncate text-primary/80 transition-colors hover:text-primary"
+                >
+                  {CONTACT_EMAIL}
+                  <span className="sr-only"> (opens Gmail in a new tab)</span>
+                </a>
+                <a
+                  href={INSTAGRAM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="shrink-0 text-primary/80 transition-colors hover:text-primary"
+                >
+                  {INSTAGRAM_HANDLE}
+                  <span className="sr-only"> on Instagram (opens in a new tab)</span>
+                </a>
+              </p>
+            </div>
           </div>
         </nav>
       </div>

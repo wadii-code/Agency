@@ -5,7 +5,7 @@ export function Faq({ items }: { items: { q: string; a: string }[] }) {
   return (
     <div className="border-t border-hairline">
       {items.map(({ q, a }) => (
-        <details key={q} className="group border-b border-hairline">
+        <details key={q} data-faq data-fade className="group border-b border-hairline">
           <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-6 text-[18px] font-medium leading-snug transition-colors hover:text-primary md:text-[20px] [&::-webkit-details-marker]:hidden">
             <h3>{q}</h3>
             <span

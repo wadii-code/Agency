@@ -1,10 +1,13 @@
 import { Annotation } from "@/components/ui/Annotation";
+import { MetaballText } from "@/components/ui/MetaballText";
 import { PageHeader } from "@/components/PageHeader";
 import { ProjectCard } from "@/components/ProjectCard";
-import { CtaBand } from "@/components/CtaBand";
+import { CtaBand, GlowOrbs } from "@/components/CtaBand";
+import { Reveal } from "@/components/Reveal";
 import { JsonLd } from "@/components/JsonLd";
 import { PROJECTS, projectPath } from "@/lib/projects";
 import { pageMetadata } from "@/lib/metadata";
+import { rise } from "@/lib/rise";
 import { absoluteUrl, breadcrumbList, graph, webPage, type Crumb } from "@/lib/structured-data";
 
 const PATH = "/work";
@@ -36,21 +39,31 @@ export default function WorkPage() {
   );
 
   return (
-    <>
+    <Reveal>
       <JsonLd data={jsonLd} />
       <PageHeader crumbs={CRUMBS}>
-        <Annotation className="mt-10">Selected work, shipped &amp; live</Annotation>
-        <h1 className="mt-5 max-w-[16ch] font-display text-section font-bold uppercase">Case studies</h1>
-        <p className="mt-6 max-w-[60ch] text-[18px] leading-relaxed text-primary/75">
+        <Annotation className="mt-10" {...rise(0.1)}>
+          Selected work, shipped &amp; live
+        </Annotation>
+        <MetaballText
+          as="h1"
+          reveal="intro"
+          text="Case studies"
+          hoverColor="var(--cat-commerce)"
+          className="mt-5 max-w-[16ch] font-display text-section font-bold uppercase"
+        />
+        <p className="mt-6 max-w-[60ch] text-[18px] leading-relaxed text-primary/75" {...rise(0.45)}>
           Online stores, a SaaS landing page and corporate and lead-generation sites, designed and built by SPARK for
           businesses in Casablanca and across Morocco. Each case study walks through the brief and what we delivered.
         </p>
       </PageHeader>
 
-      <section aria-label="All case studies" className="shell pb-8">
-        <ul className="grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
-          {PROJECTS.map((project) => (
-            <li key={project.slug}>
+      <section aria-label="All case studies" className="shell relative pb-8">
+        <GlowOrbs className="-inset-x-[6%] -inset-y-[4%]" />
+        <ul className="relative grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
+          {PROJECTS.map((project, i) => (
+            // The first row is on screen at load: it rises in with the header; the rest wipe in on scroll.
+            <li key={project.slug} {...(i < 3 ? rise(0.6 + i * 0.08) : {})}>
               <ProjectCard project={project} level="h2" />
             </li>
           ))}
@@ -61,6 +74,6 @@ export default function WorkPage() {
         title="Your project could be next"
         text="Tell us about your business and what you need online. We'll come back with how we'd approach it."
       />
-    </>
+    </Reveal>
   );
 }

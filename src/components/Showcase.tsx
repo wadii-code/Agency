@@ -4,7 +4,6 @@ import { useCallback, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
-import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { useReveal } from "@/lib/useReveal";
 import { PROJECTS, projectPath } from "@/lib/projects";
 import { cn } from "@/lib/cn";
@@ -38,37 +37,6 @@ export default function Showcase() {
   const closeViewer = useCallback(() => setViewer(null), []);
   const changeProject = useCallback((index: number) => setViewer({ index, origin: null }), []);
 
-  useGSAP(
-    () => {
-      gsap.matchMedia().add("(prefers-reduced-motion: no-preference)", () => {
-        const cards = gsap.utils.toArray<HTMLElement>("[data-card]", root.current);
-        gsap.set(cards, { clipPath: "inset(100% 0% 0% 0%)" });
-        gsap.set(gsap.utils.toArray("[data-zoom]", root.current), { scale: 1.18 });
-
-        // Each card wipes up from its bottom edge while the screenshot settles in.
-        ScrollTrigger.batch(cards, {
-          start: "top 88%",
-          once: true,
-          onEnter: (batch) => {
-            // Cleared afterwards: a clip-path would stop the glass from blurring what sits behind it.
-            gsap.to(batch, {
-              clipPath: "inset(0% 0% 0% 0%)",
-              duration: 1.2,
-              ease: "expo.inOut",
-              stagger: 0.1,
-              clearProps: "clipPath",
-            });
-            gsap.to(
-              batch.map((card) => card.querySelector("[data-zoom]")),
-              { scale: 1, duration: 1.6, ease: "expo.out", stagger: 0.1, delay: 0.15 },
-            );
-          },
-        });
-      });
-    },
-    { scope: root },
-  );
-
   return (
     <section ref={root} id="work" aria-labelledby="work-title" className="relative overflow-x-clip bg-canvas py-28 md:py-40">
       <div className="shell">
@@ -101,7 +69,7 @@ export default function Showcase() {
               return (
                 <li
                   key={project.slug}
-                  data-card
+                  data-wipe
                   className={cn(featured && "sm:col-span-2 lg:row-span-2", wide && "sm:col-span-2")}
                 >
                   {/* The title's button stretches over the whole card, so anywhere opens the preview. */}
